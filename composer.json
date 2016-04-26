@@ -1,0 +1,23 @@
+{
+    "name": "daoandco/cakephp-logger",
+    "description": "Cakephp plugin for Log user's action in database",
+    "type": "cakephp-plugin",
+    "require": {
+        "php": ">=5.4.16",
+        "cakephp/cakephp": "~3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Logging\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Logging\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}
