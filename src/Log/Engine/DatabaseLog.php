@@ -70,8 +70,8 @@ class DatabaseLog extends BaseLog {
      * @return int
      */
     protected function _userId() {
-        if ( isset($this->_context['userId']) ) {
-            $userId = (int) $this->_context['userId'];
+        if ( array_key_exists('userId', $this->_context) ) {
+            $userId = ($this->_context['userId']) ? (int) $this->_context['userId'] : null;
             unset($this->_context['userId']);
             return $userId;
         }

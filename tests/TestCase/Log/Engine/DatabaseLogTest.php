@@ -104,6 +104,25 @@ class DatabaseLogTest extends TestCase {
             $this->assertEmpty($result->context);
         }
 
+        public function testLogDontSaveUserId() {
+
+            $_SESSION = [
+                'Auth' => [
+                    'User' => [
+                        'id' => 1,
+                    ]
+                ]
+            ];
+
+            $this->assertTrue( $this->DatabaseLog->log('info', 'My message', ['scope' => ['myScope'], 'userId' => null]) );
+
+            $Table = TableRegistry::get('Logging.Logs');
+            $result = $Table->find('all')->last();
+
+            $this->assertNull($result->user_id);
+            $this->assertEmpty($result->context);
+        }
+
         public function testLogAddContext() {
 
             $this->assertTrue( $this->DatabaseLog->log('info', 'My message', ['scope' => ['myScope'], 'pull' => 'request']) );

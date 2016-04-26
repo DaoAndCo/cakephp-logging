@@ -177,6 +177,25 @@ class LogComponentTest extends TestCase
             $this->assertArrayNotHasKey('userId', $result->context);
         }
 
+        public function testWriteNotSaveUserId() {
+
+            $_SESSION = [
+                'Auth' => [
+                    'User' => [
+                        'id' => 1,
+                    ]
+                ]
+            ];
+
+            $this->assertTrue( $this->Log->write('info', 'scope', 'Hey man', ['userId' => null]) );
+
+            $Table = TableRegistry::get('Logging.Logs');
+            $result = $Table->find('all')->last();
+
+            $this->assertNull($result->user_id);
+            $this->assertArrayNotHasKey('userId', $result->context);
+        }
+
     /**
         }====> emergency() <====={
      */
