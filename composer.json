@@ -1,5 +1,5 @@
 {
-    "name": "daoandco/cakephp-logger",
+    "name": "daoandco/cakephp-logging",
     "description": "Cakephp plugin for Log user's action in database",
     "type": "cakephp-plugin",
     "require": {
