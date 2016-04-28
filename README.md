@@ -151,35 +151,38 @@ $this->loadComponent('Logging.Log');
 ```
 
 ### Configuration
-- **request:** if true store `$this->request` in Context (default: `'true'`)
-- **session:** if true store `$_SESSION` Context  (default: `'true'`)
+- **request:** if true store `$this->request` in Context (default: `'false'`)
+- **session:** if true store `$_SESSION` Context  (default: `'false'`)
+- **ip:** if true store `$this->request->clientIp()` Context  (default: `'false'`)
+- **referer:** if true store `$this->request->referer()` Context  (default: `'false'`)
+- **vars:** store more datas (ex : `['plugin' => $this->plugin]`
 
 ### Methods
-- `write($level, $scope, $message, $context, $saveRequest, $saveSession)`
+- `write($level, $scope, $message, $context, $config)`
 	Log a message
 
-- `emergency($scope, $message, $context, $saveRequest, $saveSession)`
+- `emergency($scope, $message, $context, $config)`
 	Log a emergency message
 
-- `alert($scope, $message, $context, $saveRequest, $saveSession)`
+- `alert($scope, $message, $context, $config)`
 	Log a  alert message
 
-- `critical($scope, $message, $context, $saveRequest, $saveSession)`
+- `critical($scope, $message, $context, $config)`
 	Log a critical message
 
-- `error($scope, $message, $context, $saveRequest, $saveSession)`
+- `error($scope, $message, $context, $config)`
 	Log a error message
 
-- `warning($scope, $message, $context, $saveRequest, $saveSession)`
+- `warning($scope, $message, $context, $config)`
 	Log a warning message
 
-- `notice($scope, $message, $context, $saveRequest, $saveSession)`
+- `notice($scope, $message, $context, $config)`
 	Log a notice message
 
-- `debug($scope, $message, $context, $saveRequest, $saveSession)`
+- `debug($scope, $message, $context, $config)`
 	Log a debug message
 
-- `info($scope, $message, $context, $saveRequest, $saveSession)`
+- `info($scope, $message, $context, $config)`
 	Log a info message
 
 ### Parameters
@@ -187,8 +190,7 @@ $this->loadComponent('Logging.Log');
 - **scope :** (string|array) logging scopes [More infos](http://book.cakephp.org/3.0/en/core-libraries/logging.html#logging-scopes)
 - **message:** (string) log message
 - **context:** (array) Additional data to be used for logging the message
-- **saveRequest:** if `true` add request in context, if `null` add request if `config('request') = true`
-- **saveSession:**  if `true` add `$_SESSION` in context, if `null` add `$_SESSION` if `config('session') = true`
+- **config:** change base config (ex request, session...)
 
 ### Use
 ```PHP
@@ -208,11 +210,17 @@ $this->Log->info('myScope', 'My message');
 // Add datas
 $this->Log->info('myScope', 'My message', ['key1' => 'value1', 'key2' => 'value2']);
 
-// Don't save request
-$this->Log->info('myScope', 'My message', [], false);
+// Save request
+$this->Log->info('myScope', 'My message', [], ['request' => true]);
 
-// Don't save session
-$this->Log->info('myScope', 'My message', [], null, false);
+// Save session
+$this->Log->info('myScope', 'My message', [], ['session' => true]);
+
+// Save ip
+$this->Log->info('myScope', 'My message', [], ['ip' => true]);
+
+// Save referer url
+$this->Log->info('myScope', 'My message', [], ['referer' => true]);
 
 // Don't save userId
 $this->Log->info('myScope', 'My message', ['userId' => null];
