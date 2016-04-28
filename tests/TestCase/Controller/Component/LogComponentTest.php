@@ -84,8 +84,8 @@ class LogComponentTest extends TestCase
             $this->assertEquals('scope', $result->scope);
             $this->assertEquals('Hey man', $result->message);
             $this->assertNull($result->user_id);
-            $this->assertArrayHasKey('request', $result->context);
-            $this->assertArrayHasKey('session', $result->context);
+            $this->assertArrayNotHasKey('request', $result->context);
+            $this->assertArrayNotHasKey('session', $result->context);
         }
 
         public function testWriteNotLogged() {
@@ -99,8 +99,8 @@ class LogComponentTest extends TestCase
             $this->assertEquals('scope', $result->scope);
             $this->assertEquals('Hey man', $result->message);
             $this->assertNull($result->user_id);
-            $this->assertArrayHasKey('request', $result->context);
-            $this->assertArrayHasKey('session', $result->context);
+            $this->assertArrayNotHasKey('request', $result->context);
+            $this->assertArrayNotHasKey('session', $result->context);
         }
 
         public function testWriteLogged() {
@@ -122,30 +122,30 @@ class LogComponentTest extends TestCase
             $this->assertEquals('scope', $result->scope);
             $this->assertEquals('Hey man', $result->message);
             $this->assertEquals(1, $result->user_id);
-            $this->assertArrayHasKey('request', $result->context);
-            $this->assertArrayHasKey('session', $result->context);
-        }
-
-        public function testWriteNoSaveSession() {
-
-            $this->assertTrue( $this->Log->write('info', 'scope', 'Hey man', [], true, false) );
-
-            $Table = TableRegistry::get('Logging.Logs');
-            $result = $Table->find('all')->last();
-
-            $this->assertArrayHasKey('request', $result->context);
+            $this->assertArrayNotHasKey('request', $result->context);
             $this->assertArrayNotHasKey('session', $result->context);
         }
 
-        public function testWriteNoSaveRequest() {
+        public function testWriteSaveSession() {
 
-            $this->assertTrue( $this->Log->write('info', 'scope', 'Hey man', [], false, true) );
+            $this->assertTrue( $this->Log->write('info', 'scope', 'Hey man', [], ['session' => true]) );
 
             $Table = TableRegistry::get('Logging.Logs');
             $result = $Table->find('all')->last();
 
             $this->assertArrayNotHasKey('request', $result->context);
             $this->assertArrayHasKey('session', $result->context);
+        }
+
+        public function testWriteSaveRequest() {
+
+            $this->assertTrue( $this->Log->write('info', 'scope', 'Hey man', [], ['request' => true]) );
+
+            $Table = TableRegistry::get('Logging.Logs');
+            $result = $Table->find('all')->last();
+
+            $this->assertArrayHasKey('request', $result->context);
+            $this->assertArrayNotHasKey('session', $result->context);
         }
 
         public function testWriteAddContext() {

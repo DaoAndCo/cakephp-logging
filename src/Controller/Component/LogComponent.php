@@ -16,8 +16,8 @@ class LogComponent extends Component {
      * @var array
      */
     protected $_defaultConfig = [
-        'request' => true,
-        'session' => true,
+        'request' => false,
+        'session' => false,
     ];
 
     /**
@@ -69,17 +69,19 @@ class LogComponent extends Component {
      * @param string|array $scope key can be passed to be used for further filtering
      * @param array $context Additional data to be used for logging the message.
      *  See Cake\Log\Log::config() for more information on logging scopes.
-     * @param  mixed $saveRequest : (true) add request in context /// (null) add request if config('request') = true
-     * @param  mixed $saveSession : (true) add session in context /// (null) add session if config('saveSession') = true
+     * @param  mixed $config : change base config (ex request, session...)
      * @return bool Success
      * @throws \InvalidArgumentException If invalid level is passed.
      */
-    public function write($level, $scope, $message, $context = [], $saveRequest = null, $saveSession = null) {
+    public function write($level, $scope, $message, $context = [], $config = []) {
 
-        if ( $saveRequest || ( is_null($saveRequest) && $this->config('request') ) )
+        $config['request'] = ( isset($config['request']) ) ? $config['request'] : $this->config('request');
+        $config['session'] = ( isset($config['session']) ) ? $config['session'] : $this->config('session');
+
+        if ( $config['request'] )
             $context['request'] = $this->request;
 
-        if ( $saveSession || ( is_null($saveSession) && $this->config('session') ) )
+        if ( $config['session'] )
             $context['session'] = $this->request->session()->read();
 
         $context['scope'] = (array) $scope;
