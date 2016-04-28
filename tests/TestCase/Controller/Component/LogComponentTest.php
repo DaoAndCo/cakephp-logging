@@ -230,6 +230,20 @@ class LogComponentTest extends TestCase
             $this->assertEquals('MyPlugin', $result->context['plugin']);
         }
 
+        public function testWriteOverwriteVars() {
+
+            $this->plugin = 'MyPlugin';
+            $registry = new ComponentRegistry($this->controller);
+            $this->Log   = new LogComponent($registry, ['vars' => ['plugin' => $this->plugin]]);
+
+            $this->assertTrue( $this->Log->write('info', 'scope', 'Hey man', ['plugin' => 'Yo']) );
+
+            $Table = TableRegistry::get('Logging.Logs');
+            $result = $Table->find('all')->last();
+
+            $this->assertEquals('Yo', $result->context['plugin']);
+        }
+
     /**
         }====> emergency() <====={
      */

@@ -77,28 +77,31 @@ class LogComponent extends Component {
      */
     public function write($level, $scope, $message, $context = [], $config = []) {
 
+        $_context = [];
+
         $config['request'] = ( isset($config['request']) ) ? $config['request'] : $this->config('request');
         $config['session'] = ( isset($config['session']) ) ? $config['session'] : $this->config('session');
         $config['ip']      = ( isset($config['ip']) ) ? $config['ip'] : $this->config('ip');
         $config['referer'] = ( isset($config['referer']) ) ? $config['referer'] : $this->config('referer');
 
         if ( $config['request'] )
-            $context['request'] = $this->request;
+            $_context['request'] = $this->request;
 
         if ( $config['session'] )
-            $context['session'] = $this->request->session()->read();
+            $_context['session'] = $this->request->session()->read();
 
         if ( $config['ip'] )
-            $context['ip'] = $this->request->clientIp();
+            $_context['ip'] = $this->request->clientIp();
 
         if ( $config['referer'] )
-            $context['referer'] = $this->request->referer();
+            $_context['referer'] = $this->request->referer();
 
         if ( is_array($this->config('vars')) ) {
             foreach ( $this->config('vars') as $k => $v )
-                $context[$k] = $v;
+                $_context[$k] = $v;
         }
 
+        $context = array_merge($_context, $context);
         $context['scope'] = (array) $scope;
 
         return Log::write($level, $message, $context);
