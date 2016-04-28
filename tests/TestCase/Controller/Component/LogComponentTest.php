@@ -216,6 +216,20 @@ class LogComponentTest extends TestCase
             $this->assertArrayHasKey('referer', $result->context);
         }
 
+        public function testWriteSaveVars() {
+
+            $this->plugin = 'MyPlugin';
+            $registry = new ComponentRegistry($this->controller);
+            $this->Log   = new LogComponent($registry, ['vars' => ['plugin' => $this->plugin]]);
+
+            $this->assertTrue( $this->Log->write('info', 'scope', 'Hey man') );
+
+            $Table = TableRegistry::get('Logging.Logs');
+            $result = $Table->find('all')->last();
+
+            $this->assertEquals('MyPlugin', $result->context['plugin']);
+        }
+
     /**
         }====> emergency() <====={
      */

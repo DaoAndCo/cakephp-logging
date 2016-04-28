@@ -20,6 +20,7 @@ class LogComponent extends Component {
         'session' => false,
         'ip'      => false,
         'referer' => false,
+        'vars'    => [],
     ];
 
     /**
@@ -92,6 +93,11 @@ class LogComponent extends Component {
 
         if ( $config['referer'] )
             $context['referer'] = $this->request->referer();
+
+        if ( is_array($this->config('vars')) ) {
+            foreach ( $this->config('vars') as $k => $v )
+                $context[$k] = $v;
+        }
 
         $context['scope'] = (array) $scope;
 
