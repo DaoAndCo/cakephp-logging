@@ -196,6 +196,26 @@ class LogComponentTest extends TestCase
             $this->assertArrayNotHasKey('userId', $result->context);
         }
 
+        public function testWriteSaveIp() {
+
+            $this->assertTrue( $this->Log->write('info', 'scope', 'Hey man', [], ['ip' => true]) );
+
+            $Table = TableRegistry::get('Logging.Logs');
+            $result = $Table->find('all')->last();
+
+            $this->assertArrayHasKey('ip', $result->context);
+        }
+
+        public function testWriteSaveReferer() {
+
+            $this->assertTrue( $this->Log->write('info', 'scope', 'Hey man', [], ['referer' => true]) );
+
+            $Table = TableRegistry::get('Logging.Logs');
+            $result = $Table->find('all')->last();
+
+            $this->assertArrayHasKey('referer', $result->context);
+        }
+
     /**
         }====> emergency() <====={
      */

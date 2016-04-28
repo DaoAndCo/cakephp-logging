@@ -18,6 +18,8 @@ class LogComponent extends Component {
     protected $_defaultConfig = [
         'request' => false,
         'session' => false,
+        'ip'      => false,
+        'referer' => false,
     ];
 
     /**
@@ -71,18 +73,25 @@ class LogComponent extends Component {
      *  See Cake\Log\Log::config() for more information on logging scopes.
      * @param  mixed $config : change base config (ex request, session...)
      * @return bool Success
-     * @throws \InvalidArgumentException If invalid level is passed.
      */
     public function write($level, $scope, $message, $context = [], $config = []) {
 
         $config['request'] = ( isset($config['request']) ) ? $config['request'] : $this->config('request');
         $config['session'] = ( isset($config['session']) ) ? $config['session'] : $this->config('session');
+        $config['ip']      = ( isset($config['ip']) ) ? $config['ip'] : $this->config('ip');
+        $config['referer'] = ( isset($config['referer']) ) ? $config['referer'] : $this->config('referer');
 
         if ( $config['request'] )
             $context['request'] = $this->request;
 
         if ( $config['session'] )
             $context['session'] = $this->request->session()->read();
+
+        if ( $config['ip'] )
+            $context['ip'] = $this->request->clientIp();
+
+        if ( $config['referer'] )
+            $context['referer'] = $this->request->referer();
 
         $context['scope'] = (array) $scope;
 
@@ -96,12 +105,11 @@ class LogComponent extends Component {
      * @param string $message log message
      * @param array $context Additional data to be used for logging the message.
      *  See Cake\Log\Log::config() for more information on logging scopes.
-     * @param  mixed $saveRequest : (true) add request in context /// (null) add request if config('request') = true
-     * @param  mixed $saveSession : (true) add session in context /// (null) add session if config('saveSession') = true
+     * @param  mixed $config : change base config (ex request, session...)
      * @return bool Success
      */
-    public function emergency($scope, $message, $context = [], $saveRequest = null, $saveSession = null) {
-        return $this->write('emergency', $scope, $message, $context, $saveRequest, $saveSession);
+    public function emergency($scope, $message, $context = [], $config = []) {
+        return $this->write('emergency', $scope, $message, $context, $config);
     }
 
     /**
@@ -111,12 +119,11 @@ class LogComponent extends Component {
      * @param string $message log message
      * @param array $context Additional data to be used for logging the message.
      *  See Cake\Log\Log::config() for more information on logging scopes.
-     * @param  mixed $saveRequest : (true) add request in context /// (null) add request if config('request') = true
-     * @param  mixed $saveSession : (true) add session in context /// (null) add session if config('saveSession') = true
+     * @param  mixed $config : change base config (ex request, session...)
      * @return bool Success
      */
-    public function alert($scope, $message, $context = [], $saveRequest = null, $saveSession = null) {
-        return $this->write('alert', $scope, $message, $context, $saveRequest, $saveSession);
+    public function alert($scope, $message, $context = [], $config = []) {
+        return $this->write('alert', $scope, $message, $context, $config);
     }
 
     /**
@@ -126,12 +133,11 @@ class LogComponent extends Component {
      * @param string $message log message
      * @param array $context Additional data to be used for logging the message.
      *  See Cake\Log\Log::config() for more information on logging scopes.
-     * @param  mixed $saveRequest : (true) add request in context /// (null) add request if config('request') = true
-     * @param  mixed $saveSession : (true) add session in context /// (null) add session if config('saveSession') = true
+     * @param  mixed $config : change base config (ex request, session...)
      * @return bool Success
      */
-    public function critical($scope, $message, $context = [], $saveRequest = null, $saveSession = null) {
-        return $this->write('critical', $scope, $message, $context, $saveRequest, $saveSession);
+    public function critical($scope, $message, $context = [], $config = []) {
+        return $this->write('critical', $scope, $message, $context, $config);
     }
 
     /**
@@ -141,12 +147,11 @@ class LogComponent extends Component {
      * @param string $message log message
      * @param array $context Additional data to be used for logging the message.
      *  See Cake\Log\Log::config() for more information on logging scopes.
-     * @param  mixed $saveRequest : (true) add request in context /// (null) add request if config('request') = true
-     * @param  mixed $saveSession : (true) add session in context /// (null) add session if config('saveSession') = true
+     * @param  mixed $config : change base config (ex request, session...)
      * @return bool Success
      */
-    public function error($scope, $message, $context = [], $saveRequest = null, $saveSession = null) {
-        return $this->write('error', $scope, $message, $context, $saveRequest, $saveSession);
+    public function error($scope, $message, $context = [], $config = []) {
+        return $this->write('error', $scope, $message, $context, $config);
     }
 
     /**
@@ -156,12 +161,11 @@ class LogComponent extends Component {
      * @param string $message log message
      * @param array $context Additional data to be used for logging the message.
      *  See Cake\Log\Log::config() for more information on logging scopes.
-     * @param  mixed $saveRequest : (true) add request in context /// (null) add request if config('request') = true
-     * @param  mixed $saveSession : (true) add session in context /// (null) add session if config('saveSession') = true
+     * @param  mixed $config : change base config (ex request, session...)
      * @return bool Success
      */
-    public function warning($scope, $message, $context = [], $saveRequest = null, $saveSession = null) {
-        return $this->write('warning', $scope, $message, $context, $saveRequest, $saveSession);
+    public function warning($scope, $message, $context = [], $config = []) {
+        return $this->write('warning', $scope, $message, $context, $config);
     }
 
     /**
@@ -171,12 +175,11 @@ class LogComponent extends Component {
      * @param string $message log message
      * @param array $context Additional data to be used for logging the message.
      *  See Cake\Log\Log::config() for more information on logging scopes.
-     * @param  mixed $saveRequest : (true) add request in context /// (null) add request if config('request') = true
-     * @param  mixed $saveSession : (true) add session in context /// (null) add session if config('saveSession') = true
+     * @param  mixed $config : change base config (ex request, session...)
      * @return bool Success
      */
-    public function notice($scope, $message, $context = [], $saveRequest = null, $saveSession = null) {
-        return $this->write('notice', $scope, $message, $context, $saveRequest, $saveSession);
+    public function notice($scope, $message, $context = [], $config = []) {
+        return $this->write('notice', $scope, $message, $context, $config);
     }
 
     /**
@@ -186,12 +189,11 @@ class LogComponent extends Component {
      * @param string $message log message
      * @param array $context Additional data to be used for logging the message.
      *  See Cake\Log\Log::config() for more information on logging scopes.
-     * @param  mixed $saveRequest : (true) add request in context /// (null) add request if config('request') = true
-     * @param  mixed $saveSession : (true) add session in context /// (null) add session if config('saveSession') = true
+     * @param  mixed $config : change base config (ex request, session...)
      * @return bool Success
      */
-    public function debug($scope, $message, $context = [], $saveRequest = null, $saveSession = null) {
-        return $this->write('debug', $scope, $message, $context, $saveRequest, $saveSession);
+    public function debug($scope, $message, $context = [], $config = []) {
+        return $this->write('debug', $scope, $message, $context, $config);
     }
 
     /**
@@ -201,11 +203,10 @@ class LogComponent extends Component {
      * @param string $message log message
      * @param array $context Additional data to be used for logging the message.
      *  See Cake\Log\Log::config() for more information on logging scopes.
-     * @param  mixed $saveRequest : (true) add request in context /// (null) add request if config('request') = true
-     * @param  mixed $saveSession : (true) add session in context /// (null) add session if config('saveSession') = true
+     * @param  mixed $config : change base config (ex request, session...)
      * @return bool Success
      */
-    public function info($scope, $message, $context = [], $saveRequest = null, $saveSession = null) {
-        return $this->write('info', $scope, $message, $context, $saveRequest, $saveSession);
+    public function info($scope, $message, $context = [], $config = []) {
+        return $this->write('info', $scope, $message, $context, $config);
     }
 }
