@@ -2,7 +2,9 @@
 Log user's action in your Database. This plugin is composed of a Component and a Log engine.
 This plugin is compatible with core logs of CakePHP.
 
+# ------------------------------------
 # This project is no longer maintained
+# ------------------------------------
 
 ## Requirements
 - PHP version 5.4.16 or higher
